@@ -508,6 +508,67 @@ body {
   font-size: 0.75rem;
 }
 
+/* Inside Lid Premium 3D Card */
+.pizza-lid-card {
+  background: rgba(15, 8, 8, 0.95);
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  width: 310px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(225, 157, 39, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  backface-visibility: hidden;
+  border-bottom: 4px solid var(--primary);
+}
+
+.pizza-lid-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(225, 157, 39, 0.2);
+  white-space: normal;
+  display: block;
+}
+
+.pizza-lid-card-price {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  background: rgba(124, 0, 0, 0.25);
+  border: 1px solid rgba(124, 0, 0, 0.55);
+  padding: 4px 12px;
+  border-radius: 14px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.pizza-lid-card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  white-space: normal;
+  display: block;
+}
+
+.pizza-lid-card-footer {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(241, 222, 194, 0.12);
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  font-style: italic;
+}
+
 /* Animations */
 @keyframes float {
   0%, 100% { transform: translate(-50%, -100%) translateY(0); }
@@ -586,7 +647,7 @@ body {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(20, 10, 10, 0.85);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   width: 40px;
@@ -596,6 +657,8 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 110;
+  pointer-events: auto !important;
   transition: all var(--transition-fast);
 }
 
@@ -778,6 +841,383 @@ body {
   }
   .nav-arrow-btn.right {
     right: 0.5rem;
+  }
+}
+
+/* Ultimate Phone Screen Optimizations */
+@media (max-width: 768px) {
+  .ui-overlay {
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    gap: 0;
+    inset: 0;
+  }
+  
+  .app-header {
+    padding: 0.75rem 1rem !important;
+    background: linear-gradient(to bottom, rgba(10, 5, 5, 0.85) 0%, rgba(10, 5, 5, 0) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  
+  .logo-text {
+    font-size: 1.25rem !important;
+  }
+  
+  .logo-image {
+    height: 32px !important;
+  }
+  
+  /* Horizontal pill scrollbar at the top */
+  .menu-sidebar {
+    position: absolute;
+    top: 4.6rem;
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: 70px;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 1rem !important;
+    margin: 0 !important;
+    z-index: 20;
+    pointer-events: auto;
+  }
+  
+  .menu-sidebar.collapsed {
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  .menu-sidebar > div:first-child,
+  .menu-sidebar > div:last-child {
+    display: none !important; /* Hide sidebar title/footer on mobile */
+  }
+  
+  .pizza-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.25rem 0.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbars */
+  }
+  
+  .pizza-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .pizza-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(18, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 25px; /* Pill */
+    min-width: fit-content;
+    height: 38px;
+    flex-shrink: 0;
+  }
+  
+  .pizza-card-info {
+    display: block !important;
+  }
+  
+  .pizza-card-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    margin: 0;
+  }
+  
+  /* Hide description and price in the top pill scroll */
+  .pizza-card-desc,
+  .pizza-card-price {
+    display: none !important;
+  }
+  
+  .pizza-card-img {
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+  }
+  
+  .pizza-card.active .pizza-card-img {
+    border-color: var(--accent);
+  }
+  
+  .pizza-card.active {
+    transform: translateY(-1px) scale(1.02);
+    border-color: var(--accent);
+    background: rgba(225, 157, 39, 0.15);
+    box-shadow: 0 4px 12px var(--accent-glow);
+  }
+  
+  /* Hide collapse toggle arrow on mobile */
+  .sidebar-toggle-btn {
+    display: none !important;
+  }
+  
+  /* Compact Floating bottom bar */
+  .action-panel {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+    max-width: 420px;
+    padding: 0.85rem 1rem;
+    border-radius: 20px;
+    background: rgba(15, 8, 8, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    z-index: 20;
+    pointer-events: auto;
+    margin: 0;
+    height: auto;
+  }
+  
+  /* First row: Name & Price stacked/side-by-side */
+  .action-panel > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(241, 222, 194, 0.08);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0;
+  }
+  
+  .action-panel > div:first-child > div:first-child {
+    display: none !important;
+  }
+  
+  .action-panel .price-tag {
+    font-size: 1.45rem;
+    margin: 0;
+    text-shadow: none;
+  }
+  
+  /* Second row: Pizza Name and hidden description */
+  .action-panel > div:nth-child(2) {
+    border-top: none !important;
+    padding-top: 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -0.25rem;
+  }
+  
+  .action-panel > div:nth-child(2) h3 {
+    font-size: 1.05rem !important;
+    margin: 0 !important;
+    color: var(--accent);
+    font-family: var(--font-serif);
+  }
+  
+  .action-panel > div:nth-child(2) p {
+    display: none !important; /* Hide long description to preserve viewport space */
+  }
+  
+  /* Third row: Buttons side by side */
+  .action-panel > div:nth-child(3) {
+    display: flex;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+  
+  .action-panel .btn-primary {
+    flex: 1.3;
+    padding: 0.65rem !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px;
+    height: 40px;
+  }
+  
+  .action-panel .btn-secondary {
+    flex: 1;
+    padding: 0.65rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 12px;
+    height: 40px;
+  }
+  
+  /* Control Overlay position just above the action bar */
+  .control-overlay {
+    bottom: 8.8rem !important;
+    gap: 0.6rem !important;
+  }
+  
+  .control-btn {
+    width: 38px !important;
+    height: 38px !important;
+  }
+  
+  .control-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  /* Slice Detailed View Modal */
+  .slice-detail-container {
+    padding: 1.25rem !important;
+    gap: 1rem !important;
+    border-radius: 24px !important;
+    background: rgba(18, 10, 10, 0.95) !important;
+    border: 1.5px solid var(--accent) !important;
+    position: relative;
+  }
+  
+  .slice-detail-container .close-btn {
+    position: fixed !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    background: rgba(15, 8, 8, 0.96) !important;
+    border: 1.5px solid var(--accent) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6) !important;
+    z-index: 220 !important;
+    pointer-events: auto !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  
+  .slice-canvas-wrapper {
+    height: 200px !important;
+  }
+  
+  .slice-title {
+    font-size: 1.6rem !important;
+    text-align: center;
+    margin-bottom: 0.25rem !important;
+  }
+  
+  .slice-desc {
+    font-size: 0.82rem !important;
+    text-align: center;
+    margin-bottom: 1rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .nutrition-grid {
+    gap: 0.4rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+  
+  .nutrition-item {
+    padding: 0.45rem !important;
+    border-radius: 10px !important;
+  }
+  
+  .nutrition-val {
+    font-size: 0.9rem !important;
+  }
+  
+  .nutrition-lbl {
+    font-size: 0.58rem !important;
+  }
+  
+  .cart-drawer {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 1.25rem !important;
+    background: rgba(12, 6, 6, 0.96) !important;
+  }
+  
+  .cart-drawer h2 {
+    font-size: 1.3rem !important;
+  }
+  
+  .cart-items-list {
+    margin: 1rem 0 !important;
+    gap: 0.75rem !important;
+  }
+  
+  .cart-item {
+    padding: 0.65rem !important;
+    gap: 0.75rem !important;
+    border-radius: 12px !important;
+  }
+  
+  .cart-item-emoji {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.2rem !important;
+  }
+  
+  .cart-item-name {
+    font-size: 0.88rem !important;
+  }
+  
+  .cart-item-price {
+    font-size: 0.8rem !important;
+  }
+  
+  .cart-qty-btn {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .cart-item-qty {
+    font-size: 0.9rem !important;
+  }
+  
+  .cart-summary {
+    padding-top: 1rem !important;
+    gap: 0.6rem !important;
+  }
+  
+  .cart-summary-total {
+    font-size: 1.15rem !important;
+    padding-top: 0.65rem !important;
+  }
+  
+  .cart-summary .btn-primary {
+    margin-top: 0.75rem !important;
+    padding: 0.75rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 12px !important;
+    height: 44px !important;
+  }
+  
+  /* Floating navigation arrows adjustments */
+  .nav-arrow-btn {
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(20, 10, 10, 0.65) !important;
+    border: 1px solid rgba(241, 222, 194, 0.1) !important;
+  }
+  
+  .nav-arrow-btn.left {
+    left: 0.4rem !important;
+  }
+  
+  .nav-arrow-btn.right {
+    right: 0.4rem !important;
+  }
+  
+  .nav-arrow-btn svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 }
 

@@ -1,7 +1,23 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { Html } from '@react-three/drei';
+import { Html, useGLTF } from '@react-three/drei';
+import { PIZZAS } from '../config/pizzaConfig';
+
+// Componente para cargar modelos GLTF/GLB dinámicamente con fallbacks
+function GltfModel({ path, ...props }: { path: string; [key: string]: any }) {
+  const { scene } = useGLTF(path);
+  const clone = scene.clone();
+  
+  clone.traverse((child: any) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+
+  return <primitive object={clone} {...props} />;
+}
 
 interface PizzaBoxProps {
   pizzaType: string;
@@ -101,6 +117,7 @@ export default function PizzaBox({
   };
 
   const info = getPizzaInfo();
+  const activePizza = PIZZAS.find((p) => p.id === pizzaType);
 
   // Helper to render toppings based on pizza type
   const renderToppings = () => {
@@ -337,9 +354,21 @@ export default function PizzaBox({
           document.body.style.cursor = 'auto';
         }}
       >
-        {/* 8 Slices Representation (as single object but we detect hover) */}
-        {renderPizzaBody()}
-        {renderToppings()}
+        {activePizza?.pizzaGlbPath ? (
+          <Suspense fallback={
+            <>
+              {renderPizzaBody()}
+              {renderToppings()}
+            </>
+          }>
+            <GltfModel path={activePizza.pizzaGlbPath} scale={1.0} position={[0, -0.04, 0]} />
+          </Suspense>
+        ) : (
+          <>
+            {renderPizzaBody()}
+            {renderToppings()}
+          </>
+        )}
       </group>
 
       {/* ======================================================== */}
@@ -387,34 +416,23 @@ export default function PizzaBox({
         {/* ======================================================== */}
         {isBoxOpen && (
           <Html
-            position={[0, -0.03, 1.2]}
-            rotation={[Math.PI / 2, Math.PI, 0]} // Faces forward/down when open
+            position={[0, -0.015, 1.2]}
+            rotation={[Math.PI / 2, 0, 0]}
             transform
             occlude
-            distanceFactor={1.5}
+            distanceFactor={1.2}
             style={{
               transition: 'opacity 0.6s ease',
-              width: '280px',
               pointerEvents: 'none',
             }}
           >
-            <div className="label-3d">
-              <span className="label-3d-title">{info.name}</span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-                {info.price}
-              </span>
-              <span className="label-3d-desc">{info.ingredients}</span>
-              <span style={{
-                fontSize: '0.65rem',
-                color: 'var(--text-muted)',
-                borderTop: '1px solid rgba(255,255,255,0.08)',
-                marginTop: '4px',
-                paddingTop: '4px',
-                textAlign: 'center',
-                fontStyle: 'italic'
-              }}>
-                Haz clic en la pizza para ver rebanada
-              </span>
+            <div className="pizza-lid-card">
+              <span className="pizza-lid-card-title">{info.name}</span>
+              <div className="pizza-lid-card-price">{info.price}</div>
+              <span className="pizza-lid-card-desc">{info.ingredients}</span>
+              <div className="pizza-lid-card-footer">
+                Haz clic en la pizza para ver en detalle
+              </div>
             </div>
           </Html>
         )}

@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import PizzaScene from './components/PizzaScene';
-import MenuPanel, { PIZZAS } from './components/MenuPanel';
+import MenuPanel from './components/MenuPanel';
+import { PIZZAS } from './config/pizzaConfig';
 import SliceViewer from './components/SliceViewer';
 import logoImg from './assets/FORN0.png';
 
