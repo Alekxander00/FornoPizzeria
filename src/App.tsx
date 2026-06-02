@@ -440,10 +440,12 @@ export default function App() {
       {/* DETAILED SLICE MODAL OVERLAY */}
       {/* ======================================================== */}
       <div className={`slice-detail-overlay ${isSliceModalOpen ? 'active' : ''}`}>
+        {/* Render close button directly in overlay so it's always viewport-anchored and doesn't scroll */}
+        <button className="close-btn modal-close-btn" onClick={() => setIsSliceModalOpen(false)}>
+          <X size={20} />
+        </button>
+
         <div className="slice-detail-container">
-          <button className="close-btn" onClick={() => setIsSliceModalOpen(false)}>
-            <X size={20} />
-          </button>
 
           {/* 3D Viewer for the isolated rotating slice */}
           <div className="slice-canvas-wrapper">

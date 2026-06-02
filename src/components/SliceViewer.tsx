@@ -1,26 +1,81 @@
-import { useRef, Suspense } from 'react';
+import { useRef, useEffect, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { PIZZAS } from '../config/pizzaConfig';
 
-// Componente cargador para modelos GLTF de rebanada
-function GltfModel({ path, ...props }: { path: string; [key: string]: any }) {
-  const { scene } = useGLTF(path);
-  const clone = scene.clone();
-  
-  clone.traverse((child: any) => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-    }
-  });
-
-  return <primitive object={clone} {...props} />;
-}
 
 interface SliceViewerProps {
   pizzaType: string;
+}
+
+const glbNodeMap: { [key: string]: { pizza: string; slice: string } } = {
+  pepperoni: { pizza: 'PizzaPeperoni', slice: 'RebanadaPeperoni' },
+  margherita: { pizza: 'PizzaMargarita.001', slice: 'RebanadaMargarita' },
+  vegetarian: { pizza: 'PizzaChampiñones', slice: 'RebanadaChampiñones' },
+  four_cheese: { pizza: 'PizzaQueso.001', slice: 'RebanadaQueso' },
+};
+
+function SliceGlbModel({ pizzaType }: { pizzaType: string }) {
+  const { nodes } = useGLTF('/AllPizzas.glb?v=3');
+  const nodeName = glbNodeMap[pizzaType]?.slice;
+  const node = nodes[nodeName];
+  const ref = useRef<THREE.Group>(null);
+
+  const { clone, localBounds } = useMemo(() => {
+    if (!node) return { clone: null, localBounds: null };
+    const c = node.clone();
+    c.traverse((child: any) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    c.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(c);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+
+    return {
+      clone: c,
+      localBounds: {
+        size,
+        center,
+        minY: box.min.y,
+      },
+    };
+  }, [node]);
+
+  useEffect(() => {
+    if (ref.current && localBounds) {
+      const { size, center, minY } = localBounds;
+
+      // We want the slice max dimension (width or depth) to be exactly 1.2 units
+      const targetSize = 1.2;
+      const currentSize = Math.max(size.x, size.z);
+      const scaleFactor = targetSize / currentSize;
+
+      ref.current.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+      // Center the slice horizontally and place its bottom at local Y = 0
+      ref.current.position.set(
+        -center.x * scaleFactor,
+        -minY * scaleFactor,
+        -center.z * scaleFactor
+      );
+    }
+  }, [localBounds]);
+
+  if (!clone) return null;
+
+  return (
+    <group ref={ref}>
+      <primitive object={clone} />
+    </group>
+  );
 }
 
 function Slice3D({ pizzaType }: { pizzaType: string }) {
@@ -260,7 +315,7 @@ function Slice3D({ pizzaType }: { pizzaType: string }) {
     <group ref={groupRef}>
       {activePizza?.sliceGlbPath ? (
         <Suspense fallback={renderProceduralSlice()}>
-          <GltfModel path={activePizza.sliceGlbPath} scale={1.15} position={[0, -0.05, 0]} />
+          <SliceGlbModel pizzaType={pizzaType} />
         </Suspense>
       ) : (
         renderProceduralSlice()
@@ -303,3 +358,5 @@ export default function SliceViewer({ pizzaType }: SliceViewerProps) {
     </div>
   );
 }
+
+useGLTF.preload('/AllPizzas.glb?v=3');

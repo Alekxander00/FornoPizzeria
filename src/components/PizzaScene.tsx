@@ -49,14 +49,14 @@ export default function PizzaScene({
         camera={{ position: [0, 3.8, 5.2], fov: 45 }}
         gl={{ antialias: true, preserveDrawingBuffer: true }}
       >
-        {/* Soft Ambient Light */}
-        <ambientLight intensity={0.5} />
+        {/* Soft Ambient Light - increased for PBR materials */}
+        <ambientLight intensity={0.85} />
 
-        {/* Directional Key Light */}
+        {/* Directional Key Light - casts shadows */}
         <directionalLight
           castShadow
           position={[4, 7, 3]}
-          intensity={1.2}
+          intensity={1.5}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-far={25}
@@ -64,11 +64,20 @@ export default function PizzaScene({
           shadow-camera-right={5}
           shadow-camera-top={5}
           shadow-camera-bottom={-5}
-          shadow-bias={-0.0005}
+          shadow-bias={-0.002}
         />
 
-        {/* Point Light representing ambient warmth */}
-        <pointLight position={[0, 2.5, 1]} intensity={0.4} color="#e19d27" />
+        {/* Fill light from the front to illuminate the inside of the open lid */}
+        <directionalLight
+          position={[0, 5, 6]}
+          intensity={0.7}
+          color="#fff5e0"
+        />
+
+        {/* Warm point light inside the box area */}
+        <pointLight position={[0, 1.2, 0.5]} intensity={0.9} color="#ffd580" />
+        {/* Extra light near the pizza as requested to fix shadow bugs/visibility */}
+        <pointLight position={[0, 0.5, 0]} intensity={1.5} color="#ffffff" distance={5} />
 
         <Suspense fallback={null}>
           <group position={[0, -0.5, 0]}>
