@@ -11,12 +11,8 @@ const glbNodeMap: { [key: string]: { pizza: string; slice: string } } = {
   four_cheese: { pizza: 'PizzaQueso001', slice: 'RebanadaQueso' },
 };
 
-let debugBoxNodes: string = '';
-let debugPizzaNodes: string = '';
-
 function PizzaModel({ pizzaType }: { pizzaType: string }) {
   const { nodes } = useGLTF('/AllPizzas.glb?v=3');
-  debugPizzaNodes = Object.keys(nodes).join(', ');
   const nodeName = glbNodeMap[pizzaType]?.pizza;
   const node = nodes[nodeName];
   const ref = useRef<THREE.Group>(null);
@@ -108,7 +104,6 @@ export default function PizzaBox({
 
   // Load CAJA PIZZA.glb and create cloned optimized scene
   const { nodes: boxNodes } = useGLTF('/CAJA PIZZA.glb?v=3');
-  debugBoxNodes = Object.keys(boxNodes).join(', ');
 
   const { boxScene, lidNode, boxFloorY } = useMemo(() => {
     // Clone meshes to avoid cache sharing issues. Note that useGLTF sanitizes dots to nothing in keys.
